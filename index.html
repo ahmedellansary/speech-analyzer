@@ -197,17 +197,17 @@
           <div class="lang-dropdown" id="langDropdown">
             <button id="langMenuBtn" class="brand-btn secondary lang-toggle-btn" title="Select Language / اختيار اللغة">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-              <span id="activeLangText">English</span>
+              <span id="activeLangText">العربية</span>
               <svg class="chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
             <div class="lang-menu" id="langMenu" role="menu">
-              <button class="lang-menu-item active" data-lang="en" role="menuitem">
-                <span class="lang-flag">🇺🇸</span>
-                <span class="lang-label">English</span>
-              </button>
-              <button class="lang-menu-item" data-lang="ar" role="menuitem">
+              <button class="lang-menu-item active" data-lang="ar" role="menuitem">
                 <span class="lang-flag">🇪🇬</span>
                 <span class="lang-label">العربية</span>
+              </button>
+              <button class="lang-menu-item" data-lang="en" role="menuitem">
+                <span class="lang-flag">🇺🇸</span>
+                <span class="lang-label">English</span>
               </button>
             </div>
           </div>
@@ -832,10 +832,10 @@
         <div class="enterprise-header-titles">
           <div class="enterprise-badge-pill">
             <span class="pulse-sparkle">✦</span>
-            <span>ENTERPRISE SOLUTIONS &amp; BESPOKE DEVELOPMENT</span>
+            <span id="entModalBadge">ENTERPRISE SOLUTIONS &amp; BESPOKE DEVELOPMENT</span>
           </div>
-          <h3>Custom AI Systems, Dashboards &amp; Business Solutions</h3>
-          <p>Looking to adapt this intelligence engine for your company or build custom software?</p>
+          <h3 id="entModalTitle">Custom AI Systems, Dashboards &amp; Business Solutions</h3>
+          <p id="entModalSubtitle">Looking to adapt this intelligence engine for your company or build custom software?</p>
         </div>
         <button class="dialog-close" id="closeEnterpriseModalBtn">&times;</button>
       </div>
@@ -847,62 +847,62 @@
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E00800" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
           </div>
           <div class="intro-text">
-            <strong>Engineered for High-Stakes Operations &amp; Commercial Growth</strong>
-            <p>We transform operational pain-points, voice transcripts, and scattered business data into tailored, high-converting digital products and analytical systems.</p>
+            <strong id="entIntroTitle">Engineered for High-Stakes Operations &amp; Commercial Growth</strong>
+            <p id="entIntroText">We transform operational pain-points, voice transcripts, and scattered business data into tailored, high-converting digital products and analytical systems.</p>
           </div>
         </div>
 
         <!-- 4 Core Service Capabilities Grid -->
         <div class="enterprise-services-grid">
           <!-- Card 1: Custom Dashboard & Adaptation -->
-          <div class="service-spec-card">
+          <div class="service-spec-card" id="entCard1">
             <div class="service-card-top">
               <span class="service-icon-box">📊</span>
-              <h4>Dashboard Adaptation &amp; Branding</h4>
+              <h4 id="entCard1Title">Dashboard Adaptation &amp; Branding</h4>
             </div>
-            <p>Customize this exact Speech Analyzer for your business branch network, custom KPIs, Arabic dialect models, and live CRM / POS integration.</p>
+            <p id="entCard1Desc">Customize this exact Speech Analyzer for your business branch network, custom KPIs, Arabic dialect models, and live CRM / POS integration.</p>
             <ul class="service-bullets">
-              <li>Retail, Call Center &amp; Healthcare adaptation</li>
-              <li>Custom keyword dictionaries &amp; Arabic NLP</li>
+              <li id="entCard1Bullet1">Retail, Call Center &amp; Healthcare adaptation</li>
+              <li id="entCard1Bullet2">Custom keyword dictionaries &amp; Arabic NLP</li>
             </ul>
           </div>
 
           <!-- Card 2: Root-Cause Drop & Recovery Diagnostics -->
-          <div class="service-spec-card highlight">
+          <div class="service-spec-card highlight" id="entCard2">
             <div class="service-card-top">
               <span class="service-icon-box">🔍</span>
-              <h4>Root-Cause Product &amp; Sales Drop Investigation</h4>
+              <h4 id="entCard2Title">Root-Cause Product &amp; Sales Drop Investigation</h4>
             </div>
-            <p>Suffering from sudden product performance drops, branch churn, or conversion decline? We build deep diagnostic algorithms to pinpoint the real root cause and formulate data-backed recovery plans.</p>
+            <p id="entCard2Desc">Suffering from sudden product performance drops, branch churn, or conversion decline? We build deep diagnostic algorithms to pinpoint the real root cause and formulate data-backed recovery plans.</p>
             <ul class="service-bullets">
-              <li>Granular drop tracking &amp; anomaly detection</li>
-              <li>Actionable recovery roadmap &amp; KPI rebalancing</li>
+              <li id="entCard2Bullet1">Granular drop tracking &amp; anomaly detection</li>
+              <li id="entCard2Bullet2">Actionable recovery roadmap &amp; KPI rebalancing</li>
             </ul>
           </div>
 
           <!-- Card 3: AI Chatbots & Voice Agents -->
-          <div class="service-spec-card">
+          <div class="service-spec-card" id="entCard3">
             <div class="service-card-top">
               <span class="service-icon-box">🤖</span>
-              <h4>Custom AI Chatbots &amp; Conversational Agents</h4>
+              <h4 id="entCard3Title">Custom AI Chatbots &amp; Conversational Agents</h4>
             </div>
-            <p>Deploy cutting-edge AI customer support bots, sales assistants, automated voice bots, and internal intelligence agents trained directly on your private company data.</p>
+            <p id="entCard3Desc">Deploy cutting-edge AI customer support bots, sales assistants, automated voice bots, and internal intelligence agents trained directly on your private company data.</p>
             <ul class="service-bullets">
-              <li>Egyptian &amp; Gulf Dialect Support</li>
-              <li>Omnichannel integration (WhatsApp, Web, ERP)</li>
+              <li id="entCard3Bullet1">Egyptian &amp; Gulf Dialect Support</li>
+              <li id="entCard3Bullet2">Omnichannel integration (WhatsApp, Web, ERP)</li>
             </ul>
           </div>
 
           <!-- Card 4: Accounting, Excel & Custom Web ERP -->
-          <div class="service-spec-card">
+          <div class="service-spec-card" id="entCard4">
             <div class="service-card-top">
               <span class="service-icon-box">📑</span>
-              <h4>Accounting, Advanced Excel &amp; Web Systems</h4>
+              <h4 id="entCard4Title">Accounting, Advanced Excel &amp; Web Systems</h4>
             </div>
-            <p>Custom-built operational software: automated financial modeling, high-capacity Excel accounting workbooks, standalone HTML5 enterprise tools, and inventory systems.</p>
+            <p id="entCard4Desc">Custom-built operational software: automated financial modeling, high-capacity Excel accounting workbooks, standalone HTML5 enterprise tools, and inventory systems.</p>
             <ul class="service-bullets">
-              <li>Bespoke Accounting &amp; Billing solutions</li>
-              <li>Lightweight, ultra-fast web tools (0-lag)</li>
+              <li id="entCard4Bullet1">Bespoke Accounting &amp; Billing solutions</li>
+              <li id="entCard4Bullet2">Lightweight, ultra-fast web tools (0-lag)</li>
             </ul>
           </div>
         </div>
@@ -910,14 +910,14 @@
         <!-- Contact & Direct Inquiry Hub -->
         <div class="enterprise-contact-box">
           <div class="contact-box-left">
-            <span class="contact-tag">DIRECT CONSULTATION &amp; INQUIRIES</span>
+            <span class="contact-tag" id="entContactTag">DIRECT CONSULTATION &amp; INQUIRIES</span>
             <span class="contact-email-val" id="enterpriseContactEmail">victory.business1@gmail.com</span>
-            <span class="contact-note">Direct communication with Principal Solution Architect • Rapid response within 24 hours</span>
+            <span class="contact-note" id="entContactNote">Direct communication with Principal Solution Architect • Rapid response within 24 hours</span>
           </div>
           <div class="contact-box-actions">
             <a href="mailto:victory.business1@gmail.com?subject=Enterprise%20Inquiry%20-%20Custom%20Dashboard%20%26%20Software%20Solutions&body=Hello%2C%0A%0AI%20am%20interested%20in%20discussing%20custom%20software%2Fdashboard%20solutions%20for%20our%20business.%0A%0ACompany%20Name%3A%0ARequirements%3A%0AContact%20Number%3A" class="enterprise-btn mailto-btn" id="sendInquiryEmailBtn">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-              <span>Send Inquiries</span>
+              <span id="sendInquiryBtnLabel">Send Inquiries</span>
             </a>
             <button class="enterprise-btn copy-btn" id="copyEnterpriseEmailBtn" type="button">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>

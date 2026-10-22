@@ -14064,6 +14064,9 @@ function setupEventListeners() {
   // Enterprise Solutions & For Sale Modal Controls
   const enterpriseModal = document.getElementById('enterpriseSolutionsModal');
   const openEnterpriseModal = () => {
+    if (typeof applyAppLanguage === 'function') {
+      applyAppLanguage(currentAppLang);
+    }
     if (enterpriseModal) enterpriseModal.classList.add('active');
   };
   const closeEnterpriseModal = () => {
@@ -14090,10 +14093,11 @@ function setupEventListeners() {
       try {
         await navigator.clipboard.writeText(email);
         const label = document.getElementById('copyBtnLabel');
-        if (label) label.textContent = '✓ Copied!';
-        triggerToast('Email copied to clipboard: victory.business1@gmail.com');
+        const isAr = (typeof currentAppLang !== 'undefined' && currentAppLang === 'ar');
+        if (label) label.textContent = isAr ? '✓ تم النسخ!' : '✓ Copied!';
+        triggerToast(isAr ? 'تم نسخ الإيميل إلى الحافظة: victory.business1@gmail.com' : 'Email copied to clipboard: victory.business1@gmail.com');
         setTimeout(() => {
-          if (label) label.textContent = 'Copy Email';
+          if (label) label.textContent = isAr ? 'نسخ الإيميل' : 'Copy Email';
         }, 2500);
       } catch (err) {
         const temp = document.createElement('textarea');
@@ -14200,9 +14204,22 @@ function renderCalendar() {
   const year = calCurrentDate.getFullYear();
   const month = calCurrentDate.getMonth();
 
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+  const isArLang = (typeof currentAppLang !== 'undefined' && currentAppLang === 'ar');
+  const monthNamesEn = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'];
+  const monthNamesAr = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
+    'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+  const monthNames = isArLang ? monthNamesAr : monthNamesEn;
   monthYearEl.textContent = `${monthNames[month]} ${year}`;
+
+  const dayHeaders = document.querySelectorAll('.cal-day-header');
+  if (dayHeaders.length === 7) {
+    const daysEn = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const daysAr = ['أحد', 'إثن', 'ثلا', 'أرب', 'خمي', 'جمع', 'سبت'];
+    dayHeaders.forEach((dh, idx) => {
+      dh.textContent = isArLang ? daysAr[idx] : daysEn[idx];
+    });
+  }
 
   const existingDays = grid.querySelectorAll('.cal-day');
   existingDays.forEach(d => d.remove());
@@ -14899,96 +14916,62 @@ function setupSheetImportListener() {
 
 
 // ==========================================================================
-// Multilingual Engine (English & Arabic with RTL Auto-Flip)
+// Multilingual Engine (Arabic & English with Fixed LTR Layout)
 // ==========================================================================
-let currentAppLang = localStorage.getItem('speech_analyzer_lang') || 'en';
+let currentAppLang = localStorage.getItem('speech_analyzer_lang') || 'ar';
 
 const APP_I18N = {
-  en: {
-    langLabel: 'English',
-    brandMainTitle: 'Speech Analyzer',
-    brandMainSub: 'Tech Retail Voice Intelligence',
-    navAll: 'Overview (Combined)',
-    navQuality: 'Quality (7 Sub)',
-    navSales: 'Sales (8 Sub)',
-    navTaxonomy: 'Retail Tech Dictionary',
-    navTester: 'Dialogue Spotter',
-    navImport: 'Import Sheet',
-    dateTitle: 'Date Range & Comparison',
-    userRole: 'Electronics & Retail QA',
-    forSaleBtn: 'FOR SALE • CONTACT US',
-    crumbRoot: 'Speech Analyzer',
-    compPillLabel: 'Comparison',
-    importBtn: 'Import Sheet',
-    exportBtn: 'Export',
-    searchPlaceholder: 'Search keywords, agents, stores or cameras...',
-    panelDonut: 'Ratio Donut',
-    panelBranch: 'Branch Performance',
-    panelRegional: 'Regional Operations',
-    panelTop5: 'Top 5 Spotted Words',
-    panelPillar: 'Pillar Trend (Since 01 Jan)',
-    panelMom: 'Month-over-Month Performance',
-    panelTable: 'Recent Keyword Detections',
-    filterAllSubs: 'All Sub-Categories (15 Branches)',
-    filterAllParents: 'All Categories',
-    filterParentQuality: 'Quality',
-    filterParentSales: 'Sales',
-    filterAllRegions: 'All Regions (Egypt)',
-    filterAllBranches: 'All Stores (Branches)',
-    thTxn: 'Transaction number',
-    thKw: 'Detected Keyword',
-    thSub: 'Sub-Category',
-    thCat: 'Category',
-    thTime: 'Date & Time',
-    thMgr: 'Store Manager',
-    thAgent: 'Agent Name',
-    thAgentId: 'Agent ID',
-    thStore: 'Store',
-    thRegion: 'Region',
-    thCam: 'Camera ID',
-    entBadge: 'ENTERPRISE SOLUTIONS & BESPOKE DEVELOPMENT',
-    entTitle: 'Custom AI Systems, Dashboards & Business Solutions',
-    entSubtitle: 'Looking to adapt this intelligence engine for your company or build custom software?',
-    entIntroStrong: 'Engineered for High-Stakes Operations & Commercial Growth',
-    entIntroP: 'We transform operational pain-points, voice transcripts, and scattered business data into tailored, high-converting digital products and analytical systems.',
-    c1Title: 'Dashboard Adaptation & Branding',
-    c1Desc: 'Customize this exact Speech Analyzer for your business branch network, custom KPIs, Arabic dialect models, and live CRM / POS integration.',
-    c2Title: 'Root-Cause Product & Sales Drop Investigation',
-    c2Desc: 'Suffering from sudden product performance drops, branch churn, or conversion decline? We build deep diagnostic algorithms to pinpoint the real root cause and formulate data-backed recovery plans.',
-    c3Title: 'Custom AI Chatbots & Conversational Agents',
-    c3Desc: 'Deploy cutting-edge AI customer support bots, sales assistants, automated voice bots, and internal intelligence agents trained directly on your private company data.',
-    c4Title: 'Accounting, Advanced Excel & Web Systems',
-    c4Desc: 'Custom-built operational software: automated financial modeling, high-capacity Excel accounting workbooks, standalone HTML5 enterprise tools, and inventory systems.',
-    entContactTag: 'DIRECT CONSULTATION & INQUIRIES',
-    entContactNote: 'Direct communication with Principal Solution Architect • Rapid response within 24 hours',
-    entSendBtn: 'Send Inquiries',
-    entCopyBtn: 'Copy Email'
-  },
   ar: {
     langLabel: 'العربية',
     brandMainTitle: 'محلل الصوت والذكاء الاصطناعي',
     brandMainSub: 'ذكاء محادثات تجزئة الإلكترونيات',
+    navSectionLayers: 'طبقات المراقبة والتحليل',
+    navSectionTools: 'الأدوات والاستكشاف',
     navAll: 'نظرة شاملة (الكل)',
-    navQuality: 'الجودة والرقابة (7 فئات)',
-    navSales: 'المبيعات والتجارة (8 فئات)',
+    navQuality: 'الجودة والرقابة',
+    navQualityBadge: '7 فئات',
+    navSales: 'المبيعات والتجارة',
+    navSalesBadge: '8 فئات',
     navTaxonomy: 'قاموس المصطلحات',
     navTester: 'فحص المحادثات الصوتية',
     navImport: 'استيراد شيت إكسيل',
     dateTitle: 'نطاق التاريخ والمقارنة',
+    userName: 'مسؤول الجودة والرقابة',
     userRole: 'مسؤول الرقابة وجودة الأجهزة',
     forSaleBtn: 'استشارات وحلول خاصة • تواصل معنا',
     crumbRoot: 'محلل المحادثات',
     compPillLabel: 'مقارنة الفترات',
     importBtn: 'استيراد إكسيل',
     exportBtn: 'تصدير التقارير',
+    exportCsv: 'تصدير ملف CSV',
+    exportPpt: 'تصدير عرض تقديمي PPTX',
+    metricTotalTitle: 'إجمالي الكلمات المرصودة',
+    metricTotalSub: 'تراكمي رصد نصوص المحادثات بالفروع',
+    metricQualityRatioTitle: 'نسبة الجودة والرقابة',
+    metricQualityRatioSub: 'حصة مصطلحات الجودة',
+    metricSalesRatioTitle: 'نسبة المبيعات والعروض',
+    metricSalesRatioSub: 'حصة مصطلحات المبيعات',
+    metricComplianceTitle: 'معدل الالتزام بمعايير الجودة',
+    metricComplianceSub: 'مبني على تفريغ محادثات الفروع',
+    metricBranchesTitle: 'الفروع النشطة بالرصد',
+    metricBranchesSub: 'فروع التجزئة المغطاة',
+    metricMicsTitle: 'الكاميرات والميكروفونات النشطة',
+    metricMicsSub: 'في جميع مساحات الفروع',
     searchPlaceholder: 'بحث بالكلمة، اسم الموظف، الفرع، أو الكاميرا...',
     panelDonut: 'معدل الجودة والمبيعات',
+    panelDonutSub: 'نسبة الجودة (الرقابة) مقابل المبيعات (الإيرادات)',
     panelBranch: 'أداء الفروع والمبيعات',
+    panelBranchSub: 'ترتيب الفروع حسب كثافة الكلمات المرصودة',
     panelRegional: 'العمليات الجغرافية والأقاليم',
+    panelRegionalSub: 'توزيع الكلمات المرصودة عبر أقاليم مصر',
     panelTop5: 'أعلى 5 كلمات مرصودة بالفروع',
+    panelTop5Sub: 'أكثر العبارات تكراراً في النطاق المحدد',
     panelPillar: 'مسار الأداء التراكمي منذ 01 يناير',
+    panelPillarSub: 'حجم وتطور التصنيفات الفرعية عبر الزمن',
     panelMom: 'مقارنة الأداء الشهري',
+    panelMomSub: 'مقارنة تباين الجودة والمبيعات شهرياً',
     panelTable: 'سجل رصد الكلمات المباشر بالفروع',
+    panelTableSub: 'سجل تفصيلي مباشر لعمليات الرصد مع بيانات الفروع والموظفين',
     filterAllSubs: 'جميع التصنيفات الفرعية (15 فرع)',
     filterAllParents: 'جميع الفئات',
     filterParentQuality: 'الجودة والرقابة',
@@ -15006,31 +14989,137 @@ const APP_I18N = {
     thStore: 'الفرع',
     thRegion: 'الإقليم',
     thCam: 'رقم الكاميرا',
+    // Enterprise Solutions Modal (Bespoke Development & Services)
     entBadge: 'حلول الشركات وتطوير الأنظمة المخصصة',
-    entTitle: 'أنظمة الذكاء الاصطناعي وتطوير البرمجيات المخصصة',
-    entSubtitle: 'هل ترغب في تطويع هذا النظام لشركتك أو بناء برامج مخصصة لعملك؟',
-    entIntroStrong: 'حلول هندسية مصممة للعمليات الحيوية والنمو التجاري',
-    entIntroP: 'نحوّل محادثات الفروع وبيانات الأعمال المعقدة إلى أنظمة ذكية وأدوات رقمية عالية الكفاءة.',
-    c1Title: 'تخصيص وتهيئة الداشبورد',
-    c1Desc: 'تهيئة وتطويع هذا النظام لشبكة فروع شركتك، مع تخصيص الـ KPIs، وقواميس اللهجة، والربط مع أنظمة الـ CRM/POS.',
+    entTitle: 'أنظمة الذكاء الاصطناعي، لوحات التحكم وتطوير البرمجيات المخصصة',
+    entSubtitle: 'هل ترغب في تطويع نظام الذكاء الاصطناعي هذا لشركتك أو بناء برامج مخصصة لأعمالك؟',
+    entIntroTitle: 'حلول برمجية وهندسية مصممة للعمليات الحيوية والنمو التجاري',
+    entIntroText: 'نحوّل نقاط الألم التشغيلية، ومحادثات الفروع، وتشتت بيانات الأعمال إلى أدوات رقمية وأنظمة تحليلية دقيقة عالية التحويل.',
+    c1Title: 'تخصيص وتهيئة الداشبورد لشركتك',
+    c1Desc: 'تطويع هذا النظام بالكامل لشبكة فروع شركتك، مع تخصيص مؤشرات الأداء (KPIs)، ونماذج معالجة اللهجة، والربط مع أنظمة الـ CRM/POS أو سيرفرات تسجيل المكالمات وشيتات الإكسيل.',
+    c1Bullet1: 'ملاءمة قطاعات التجزئة، مراكز الاتصال والخدمات الطبية',
+    c1Bullet2: 'قواميس رصد كلمات مخصصة ومعالجة متقدمة للهجة المصرية',
     c2Title: 'تتبع وحل أسباب دروب المبيعات والمنتجات',
-    c2Desc: 'لو عندك منتج أو فرع حدث به هبوط مفاجئ، نقوم ببناء خوارزميات فحص عميقة لتحديد السبب الحقيقي ووضع خطة تعافي مبنية على الأرقام.',
+    c2Desc: 'لو عندك منتج أو فرع حدث به هبوط مفاجئ في المبيعات، نقوم ببناء خوارزميات فحص عميقة لتحديد السبب الحقيقي الخفي ووضع خطة تعافي عملية مبنية على الأرقام.',
+    c2Bullet1: 'رصد دقيق لنقاط الهبوط واكتشاف الخلل والأنماط الشاذة',
+    c2Bullet2: 'خطة تعافي عملية وإعادة موازنة مؤشرات الأداء',
     c3Title: 'شات بوت ومساعدين ذكاء اصطناعي مخصصين',
-    c3Desc: 'برمجة شات بوت ذكي لخدمة العملاء والمبيعات ومساعدين صوتيين على الواتساب والويب مدربين على داتا شركتك بدقة تامة.',
-    c4Title: 'أنظمة محاسبية وإكسيل متقدم وويب',
-    c4Desc: 'برامج مخصصة لشغلك: أنظمة محاسبية متقدمة على Excel بمحركات مؤتمتة، أو برامج ويب خفيفة وسريعة (HTML5) لإدارة الحسابات والمخزون.',
+    c3Desc: 'برمجة وتدريب بوتات ذكية لخدمة العملاء، ومساعدي مبيعات، وبوتات صوتية مؤتمتة، مدربين مباشرة على داتا شركتك وسياستك الداخلية بدقة تامة.',
+    c3Bullet1: 'دعم فائق للهجة المصرية والخليجية',
+    c3Bullet2: 'ربط متعدد القنوات (واتساب، ويب، أنظمة ERP)',
+    c4Title: 'أنظمة محاسبية، إكسيل متقدم وبرمجيات ويب',
+    c4Desc: 'برامج مخصصة لشغلك: أنظمة محاسبية متقدمة على Excel بمحركات مؤتمتة، أو برامج ويب خفيفة وسريعة (HTML5) لإدارة الحسابات والمخزون والعمليات.',
+    c4Bullet1: 'حلول محاسبية وفواتير مفصلة حسب رغبتك',
+    c4Bullet2: 'أدوات ويب فائقة السرعة وفورية بدون أي بطء',
     entContactTag: 'استشارة وطلب خدمات مباشرة',
-    entContactNote: 'تواصل مباشر مع مهندس الحلول والأنظمة • الرد خلال 24 ساعة',
+    entContactNote: 'تواصل مباشر مع مهندس الحلول والأنظمة • الرد السريع خلال 24 ساعة',
     entSendBtn: 'إرسال استفسار',
-    entCopyBtn: 'نسخ الإيميل'
+    entCopyBtn: 'نسخ الإيميل',
+    entCopied: '✓ تم النسخ!'
+  },
+  en: {
+    langLabel: 'English',
+    brandMainTitle: 'Speech Analyzer',
+    brandMainSub: 'Tech Retail Voice Intelligence',
+    navSectionLayers: 'MONITORING LAYERS',
+    navSectionTools: 'EXPLORATION & TOOLS',
+    navAll: 'Overview (All Retail)',
+    navQuality: 'Quality',
+    navQualityBadge: '7 Sub',
+    navSales: 'Sales',
+    navSalesBadge: '8 Sub',
+    navTaxonomy: 'Retail Tech Dictionary',
+    navTester: 'Dialogue Spotter',
+    navImport: 'Import Sheet',
+    dateTitle: 'Date Range & Comparison',
+    userName: 'Tech Care Lead',
+    userRole: 'Electronics & Retail QA',
+    forSaleBtn: 'FOR SALE • CONTACT US',
+    crumbRoot: 'Speech Analyzer',
+    compPillLabel: 'Comparison',
+    importBtn: 'Import Sheet',
+    exportBtn: 'Export',
+    exportCsv: 'Export CSV',
+    exportPpt: 'Export PowerPoint',
+    metricTotalTitle: 'Total Spotted Words',
+    metricTotalSub: 'Cumulative call transcript detections',
+    metricQualityRatioTitle: 'Quality Ratio',
+    metricQualityRatioSub: 'Quality keywords share',
+    metricSalesRatioTitle: 'Sales / Offer Ratio',
+    metricSalesRatioSub: 'Commercial / sales keywords share',
+    metricComplianceTitle: 'Quality Compliance Rate',
+    metricComplianceSub: 'Based on active branch transcripts',
+    metricBranchesTitle: 'Active Detection Branches',
+    metricBranchesSub: 'Retail locations covered',
+    metricMicsTitle: 'Active Cameras / Mics',
+    metricMicsSub: 'Across all retail floor zones',
+    searchPlaceholder: 'Search keywords, agents, stores or cameras...',
+    panelDonut: 'Ratio Donut',
+    panelDonutSub: 'Quality (Compliance) vs Sales (Revenue)',
+    panelBranch: 'Branch Performance',
+    panelBranchSub: 'Top stores by detected keyword frequency',
+    panelRegional: 'Regional Operations',
+    panelRegionalSub: 'Spotted word distribution across Egypt territories',
+    panelTop5: 'Top 5 Spotted Words',
+    panelTop5Sub: 'Most recurring phrases in active selection',
+    panelPillar: 'Pillar Trend (Since 01 Jan)',
+    panelPillarSub: 'Cumulative sub-category volume over time',
+    panelMom: 'Month-over-Month Performance',
+    panelMomSub: 'Quality vs Sales monthly variance',
+    panelTable: 'Recent Keyword Detections',
+    panelTableSub: 'Real-time speech transcript logs with branch metadata',
+    filterAllSubs: 'All Sub-Categories (15 Branches)',
+    filterAllParents: 'All Categories',
+    filterParentQuality: 'Quality',
+    filterParentSales: 'Sales',
+    filterAllRegions: 'All Regions (Egypt)',
+    filterAllBranches: 'All Stores (Branches)',
+    thTxn: 'Transaction number',
+    thKw: 'Detected Keyword',
+    thSub: 'Sub-Category',
+    thCat: 'Category',
+    thTime: 'Date & Time',
+    thMgr: 'Store Manager',
+    thAgent: 'Agent Name',
+    thAgentId: 'Agent ID',
+    thStore: 'Store',
+    thRegion: 'Region',
+    thCam: 'Camera ID',
+    // Enterprise Solutions Modal (Bespoke Development & Services)
+    entBadge: 'ENTERPRISE SOLUTIONS & BESPOKE DEVELOPMENT',
+    entTitle: 'Custom AI Systems, Dashboards & Business Solutions',
+    entSubtitle: 'Looking to adapt this intelligence engine for your company or build custom software?',
+    entIntroTitle: 'Engineered for High-Stakes Operations & Commercial Growth',
+    entIntroText: 'We transform operational pain-points, voice transcripts, and scattered business data into tailored, high-converting digital products and analytical systems.',
+    c1Title: 'Dashboard Adaptation & Branding',
+    c1Desc: 'Customize this exact Speech Analyzer for your business branch network, custom KPIs, Arabic dialect models, and live CRM / POS integration.',
+    c1Bullet1: 'Retail, Call Center & Healthcare adaptation',
+    c1Bullet2: 'Custom keyword dictionaries & Arabic NLP',
+    c2Title: 'Root-Cause Product & Sales Drop Investigation',
+    c2Desc: 'Suffering from sudden product performance drops, branch churn, or conversion decline? We build deep diagnostic algorithms to pinpoint the real root cause and formulate data-backed recovery plans.',
+    c2Bullet1: 'Granular drop tracking & anomaly detection',
+    c2Bullet2: 'Actionable recovery roadmap & KPI rebalancing',
+    c3Title: 'Custom AI Chatbots & Conversational Agents',
+    c3Desc: 'Deploy cutting-edge AI customer support bots, sales assistants, automated voice bots, and internal intelligence agents trained directly on your private company data.',
+    c3Bullet1: 'Egyptian & Gulf Dialect Support',
+    c3Bullet2: 'Omnichannel integration (WhatsApp, Web, ERP)',
+    c4Title: 'Accounting, Advanced Excel & Web Systems',
+    c4Desc: 'Custom-built operational software: automated financial modeling, high-capacity Excel accounting workbooks, standalone HTML5 enterprise tools, and inventory systems.',
+    c4Bullet1: 'Bespoke Accounting & Billing solutions',
+    c4Bullet2: 'Lightweight, ultra-fast web tools (0-lag)',
+    entContactTag: 'DIRECT CONSULTATION & INQUIRIES',
+    entContactNote: 'Direct communication with Principal Solution Architect • Rapid response within 24 hours',
+    entSendBtn: 'Send Inquiries',
+    entCopyBtn: 'Copy Email',
+    entCopied: '✓ Copied!'
   }
 };
 
-function applyAppLanguage(lang = 'en') {
+function applyAppLanguage(lang = 'ar') {
   currentAppLang = lang;
   localStorage.setItem('speech_analyzer_lang', lang);
   const isAr = lang === 'ar';
-  const t = APP_I18N[lang] || APP_I18N.en;
+  const t = APP_I18N[lang] || APP_I18N.ar;
 
   // Language attribute & font styling (Strictly keep dir="ltr" so sidebar and layout never move!)
   document.documentElement.lang = isAr ? 'ar' : 'en';
@@ -15050,15 +15139,40 @@ function applyAppLanguage(lang = 'en') {
   const bSub = document.querySelector('.brand-main-sub');
   if (bSub) bSub.textContent = t.brandMainSub;
 
+  // Sidebar Nav Section Titles
+  const navSectionTitles = document.querySelectorAll('.nav-section-title');
+  if (navSectionTitles.length >= 2) {
+    navSectionTitles[0].textContent = t.navSectionLayers;
+    navSectionTitles[1].textContent = t.navSectionTools;
+  }
+
   // Sidebar Nav Items
-  const navBtns = document.querySelectorAll('.sidebar-nav .nav-item');
-  if (navBtns.length >= 6) {
-    const s0 = navBtns[0].querySelector('span'); if (s0) s0.textContent = t.navAll;
-    const s1 = navBtns[1].querySelector('span'); if (s1) s1.textContent = t.navQuality;
-    const s2 = navBtns[2].querySelector('span'); if (s2) s2.textContent = t.navSales;
-    const s3 = navBtns[3].querySelector('span'); if (s3) s3.textContent = t.navTaxonomy;
-    const s4 = navBtns[4].querySelector('span'); if (s4) s4.textContent = t.navTester;
-    const s5 = navBtns[5].querySelector('span'); if (s5) s5.textContent = t.navImport;
+  const layerOverviewBtn = document.getElementById('layerOverviewBtn');
+  if (layerOverviewBtn) {
+    const sp = layerOverviewBtn.querySelector('span');
+    if (sp) sp.textContent = t.navAll;
+  }
+
+  const layerKpiBtn = document.getElementById('layerKpiBtn');
+  if (layerKpiBtn) {
+    const sp = layerKpiBtn.querySelector('span:first-of-type');
+    if (sp) sp.textContent = t.navQuality;
+    const badge = layerKpiBtn.querySelector('.kpi-count-badge');
+    if (badge) badge.textContent = t.navQualityBadge;
+  }
+
+  const layerAuditBtn = document.getElementById('layerAuditBtn');
+  if (layerAuditBtn) {
+    const sp = layerAuditBtn.querySelector('span:first-of-type');
+    if (sp) sp.textContent = t.navSales;
+    const badge = layerAuditBtn.querySelector('.audit-count-badge');
+    if (badge) badge.textContent = t.navSalesBadge;
+  }
+
+  const sidebarTaxonomyBtn = document.getElementById('sidebarTaxonomyBtn');
+  if (sidebarTaxonomyBtn) {
+    const sp = sidebarTaxonomyBtn.querySelector('span');
+    if (sp) sp.textContent = t.navTaxonomy;
   }
 
   // Sidebar Date title
@@ -15066,44 +15180,61 @@ function applyAppLanguage(lang = 'en') {
   if (dateTitle) dateTitle.textContent = t.dateTitle;
 
   // User Profile
+  const uName = document.querySelector('.user-card-name');
+  if (uName) uName.textContent = t.userName;
   const uRole = document.querySelector('.user-card-role');
   if (uRole) uRole.textContent = t.userRole;
   const saleLbl = document.querySelector('.for-sale-label');
   if (saleLbl) saleLbl.textContent = t.forSaleBtn;
 
+  // Top Action Bar
+  const crumbRoot = document.querySelector('.crumb-root');
+  if (crumbRoot) crumbRoot.textContent = t.crumbRoot;
+  const compLabel = document.querySelector('.comp-pill-label');
+  if (compLabel) compLabel.textContent = t.compPillLabel;
+  const importSpan = document.querySelector('#headerImportSheetBtn span');
+  if (importSpan) importSpan.textContent = t.importBtn;
+  const exportSpan = document.querySelector('#exportMenuBtn > span');
+  if (exportSpan) exportSpan.textContent = t.exportBtn;
+
+  // Metric Cards
+  const setCardText = (id, title, sub) => {
+    const c = document.getElementById(id);
+    if (!c) return;
+    const h = c.querySelector('.metric-title'); if (h) h.textContent = title;
+    const p = c.querySelector('.metric-subtext'); if (p) p.textContent = sub;
+  };
+  setCardText('metricCard1', t.metricTotalTitle, t.metricTotalSub);
+  setCardText('metricCard2', t.metricQualityRatioTitle, t.metricQualityRatioSub);
+  setCardText('metricCard3', t.metricSalesRatioTitle, t.metricSalesRatioSub);
+  setCardText('metricCard4', t.metricComplianceTitle, t.metricComplianceSub);
+  setCardText('metricCard5', t.metricBranchesTitle, t.metricBranchesSub);
+  setCardText('metricCard6', t.metricMicsTitle, t.metricMicsSub);
+
+  // Search input placeholder
+  const searchInput = document.getElementById('tableSearchInput');
+  if (searchInput) searchInput.placeholder = t.searchPlaceholder;
 
   // Panel titles
-  const donutH4 = document.querySelector('.donut-panel .panel-title');
-  if (donutH4) {
-    const icon = donutH4.querySelector('svg');
-    donutH4.textContent = '';
-    if (icon) donutH4.appendChild(icon);
-    donutH4.append(' ' + t.panelDonut);
-  }
-
-  const branchH4 = document.querySelector('.branch-panel .panel-title');
-  if (branchH4) {
-    const icon = branchH4.querySelector('svg');
-    branchH4.textContent = '';
-    if (icon) branchH4.appendChild(icon);
-    branchH4.append(' ' + t.panelBranch);
-  }
-
-  const regH4 = document.querySelector('.region-panel .panel-title');
-  if (regH4) {
-    const icon = regH4.querySelector('svg');
-    regH4.textContent = '';
-    if (icon) regH4.appendChild(icon);
-    regH4.append(' ' + t.panelRegional);
-  }
-
-  const top5H4 = document.querySelector('.top-words-panel .panel-title');
-  if (top5H4) {
-    const icon = top5H4.querySelector('svg');
-    top5H4.textContent = '';
-    if (icon) top5H4.appendChild(icon);
-    top5H4.append(' ' + t.panelTop5);
-  }
+  const setPanelTitle = (selector, title, sub) => {
+    const p = document.querySelector(selector);
+    if (!p) return;
+    const h4 = p.querySelector('.panel-title');
+    if (h4) {
+      const svg = h4.querySelector('svg');
+      h4.textContent = '';
+      if (svg) h4.appendChild(svg);
+      h4.append(' ' + title);
+    }
+    const subEl = p.querySelector('.panel-subtitle');
+    if (subEl && sub) subEl.textContent = sub;
+  };
+  setPanelTitle('.donut-panel', t.panelDonut, t.panelDonutSub);
+  setPanelTitle('.branch-panel', t.panelBranch, t.panelBranchSub);
+  setPanelTitle('.region-panel', t.panelRegional, t.panelRegionalSub);
+  setPanelTitle('.top-words-panel', t.panelTop5, t.panelTop5Sub);
+  setPanelTitle('.pillar-panel', t.panelPillar, t.panelPillarSub);
+  setPanelTitle('.mom-panel', t.panelMom, t.panelMomSub);
 
   const tableH3 = document.querySelector('.table-card-header .title-left-side h3');
   if (tableH3) {
@@ -15112,6 +15243,8 @@ function applyAppLanguage(lang = 'en') {
     if (icon) tableH3.appendChild(icon);
     tableH3.append(' ' + t.panelTable);
   }
+  const tableSub = document.querySelector('.table-card-header .title-left-side p');
+  if (tableSub) tableSub.textContent = t.panelTableSub;
 
   // Filter dropdown placeholders
   const parentFilter = document.getElementById('parentCategoryFilter');
@@ -15124,24 +15257,6 @@ function applyAppLanguage(lang = 'en') {
   if (regFilter && regFilter.options.length) regFilter.options[0].textContent = t.filterAllRegions;
   const storeFilter = document.getElementById('storeFilter');
   if (storeFilter && storeFilter.options.length) storeFilter.options[0].textContent = t.filterAllBranches;
-
-  // Re-render table and top 5 words so words and badges adapt
-  if (typeof renderDetectionsTable === 'function') renderDetectionsTable();
-  if (typeof renderTop5WordsCloud === 'function') renderTop5WordsCloud(currentOperationalLayer);
-
-  // Top Action Bar
-  const crumbRoot = document.querySelector('.crumb-root');
-  if (crumbRoot) crumbRoot.textContent = t.crumbRoot;
-  const compLabel = document.querySelector('.comp-pill-label');
-  if (compLabel) compLabel.textContent = t.compPillLabel;
-  const importSpan = document.querySelector('#headerImportSheetBtn span');
-  if (importSpan) importSpan.textContent = t.importBtn;
-  const exportSpan = document.querySelector('#exportMenuBtn > span');
-  if (exportSpan) exportSpan.textContent = t.exportBtn;
-
-  // Search input placeholder
-  const searchInput = document.getElementById('tableSearchInput');
-  if (searchInput) searchInput.placeholder = t.searchPlaceholder;
 
   // Table Headers
   const thMap = {
@@ -15162,39 +15277,55 @@ function applyAppLanguage(lang = 'en') {
     if (th) th.textContent = thMap[cls];
   });
 
-  // Enterprise Solutions Modal Texts
-  const badgePill = document.querySelector('.enterprise-badge-pill span:last-child');
-  if (badgePill) badgePill.textContent = t.entBadge;
-  const modalH3 = document.querySelector('.enterprise-header-titles h3');
-  if (modalH3) modalH3.textContent = t.entTitle;
-  const modalP = document.querySelector('.enterprise-header-titles p');
-  if (modalP) modalP.textContent = t.entSubtitle;
+  // Enterprise Solutions Modal Texts (Direct IDs for 100% precision)
+  const setElText = (id, val) => {
+    const el = document.getElementById(id);
+    if (el && val) el.textContent = val;
+  };
 
-  const introStrong = document.querySelector('.intro-text strong');
-  if (introStrong) introStrong.textContent = t.entIntroStrong;
-  const introP = document.querySelector('.intro-text p');
-  if (introP) introP.textContent = t.entIntroP;
+  setElText('entModalBadge', t.entBadge);
+  setElText('entModalTitle', t.entTitle);
+  setElText('entModalSubtitle', t.entSubtitle);
+  setElText('entIntroTitle', t.entIntroTitle);
+  setElText('entIntroText', t.entIntroText);
 
-  const cards = document.querySelectorAll('.service-spec-card');
-  if (cards.length >= 4) {
-    const h0 = cards[0].querySelector('h4'); if (h0) h0.textContent = t.c1Title;
-    const p0 = cards[0].querySelector('p'); if (p0) p0.textContent = t.c1Desc;
-    const h1 = cards[1].querySelector('h4'); if (h1) h1.textContent = t.c2Title;
-    const p1 = cards[1].querySelector('p'); if (p1) p1.textContent = t.c2Desc;
-    const h2 = cards[2].querySelector('h4'); if (h2) h2.textContent = t.c3Title;
-    const p2 = cards[2].querySelector('p'); if (p2) p2.textContent = t.c3Desc;
-    const h3 = cards[3].querySelector('h4'); if (h3) h3.textContent = t.c4Title;
-    const p3 = cards[3].querySelector('p'); if (p3) p3.textContent = t.c4Desc;
+  // Card 1: Dashboard Adaptation
+  setElText('entCard1Title', t.c1Title);
+  setElText('entCard1Desc', t.c1Desc);
+  setElText('entCard1Bullet1', t.c1Bullet1);
+  setElText('entCard1Bullet2', t.c1Bullet2);
+
+  // Card 2: Drop Investigation
+  setElText('entCard2Title', t.c2Title);
+  setElText('entCard2Desc', t.c2Desc);
+  setElText('entCard2Bullet1', t.c2Bullet1);
+  setElText('entCard2Bullet2', t.c2Bullet2);
+
+  // Card 3: AI Chatbots
+  setElText('entCard3Title', t.c3Title);
+  setElText('entCard3Desc', t.c3Desc);
+  setElText('entCard3Bullet1', t.c3Bullet1);
+  setElText('entCard3Bullet2', t.c3Bullet2);
+
+  // Card 4: Accounting & Web
+  setElText('entCard4Title', t.c4Title);
+  setElText('entCard4Desc', t.c4Desc);
+  setElText('entCard4Bullet1', t.c4Bullet1);
+  setElText('entCard4Bullet2', t.c4Bullet2);
+
+  // Contact Hub
+  setElText('entContactTag', t.entContactTag);
+  setElText('entContactNote', t.entContactNote);
+  setElText('sendInquiryBtnLabel', t.entSendBtn);
+  const copyBtnLabel = document.getElementById('copyBtnLabel');
+  if (copyBtnLabel && copyBtnLabel.textContent !== '✓ Copied!' && copyBtnLabel.textContent !== '✓ تم النسخ!') {
+    copyBtnLabel.textContent = t.entCopyBtn;
   }
 
-  const cTag = document.querySelector('.contact-tag');
-  if (cTag) cTag.textContent = t.entContactTag;
-  const cNote = document.querySelector('.contact-note');
-  if (cNote) cNote.textContent = t.entContactNote;
-  const sendBtnSpan = document.querySelector('#sendInquiryEmailBtn span');
-  if (sendBtnSpan) sendBtnSpan.textContent = t.entSendBtn;
-  const copyBtnLabel = document.getElementById('copyBtnLabel');
-  if (copyBtnLabel && copyBtnLabel.textContent !== '✓ Copied!') copyBtnLabel.textContent = t.entCopyBtn;
+  // Re-render table and top 5 words so words and badges adapt
+  if (typeof renderDetectionsTable === 'function') renderDetectionsTable();
+  if (typeof renderTop5WordsCloud === 'function') renderTop5WordsCloud(currentOperationalLayer);
+  if (typeof renderCalendar === 'function') renderCalendar();
 }
 
 function setupLanguageDropdown() {
@@ -15227,6 +15358,6 @@ function setupLanguageDropdown() {
     });
   });
 
-  // Apply initially saved or default language
+  // Apply initial language
   applyAppLanguage(currentAppLang);
 }
