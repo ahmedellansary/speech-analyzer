@@ -14922,6 +14922,19 @@ const APP_I18N = {
     importBtn: 'Import Sheet',
     exportBtn: 'Export',
     searchPlaceholder: 'Search keywords, agents, stores or cameras...',
+    panelDonut: 'Ratio Donut',
+    panelBranch: 'Branch Performance',
+    panelRegional: 'Regional Operations',
+    panelTop5: 'Top 5 Spotted Words',
+    panelPillar: 'Pillar Trend (Since 01 Jan)',
+    panelMom: 'Month-over-Month Performance',
+    panelTable: 'Recent Keyword Detections',
+    filterAllSubs: 'All Sub-Categories (15 Branches)',
+    filterAllParents: 'All Categories',
+    filterParentQuality: 'Quality',
+    filterParentSales: 'Sales',
+    filterAllRegions: 'All Regions (Egypt)',
+    filterAllBranches: 'All Stores (Branches)',
     thTxn: 'Transaction number',
     thKw: 'Detected Keyword',
     thSub: 'Sub-Category',
@@ -14969,6 +14982,19 @@ const APP_I18N = {
     importBtn: 'استيراد إكسيل',
     exportBtn: 'تصدير التقارير',
     searchPlaceholder: 'بحث بالكلمة، اسم الموظف، الفرع، أو الكاميرا...',
+    panelDonut: 'معدل الجودة والمبيعات',
+    panelBranch: 'أداء الفروع والمبيعات',
+    panelRegional: 'العمليات الجغرافية والأقاليم',
+    panelTop5: 'أعلى 5 كلمات مرصودة بالفروع',
+    panelPillar: 'مسار الأداء التراكمي منذ 01 يناير',
+    panelMom: 'مقارنة الأداء الشهري',
+    panelTable: 'سجل رصد الكلمات المباشر بالفروع',
+    filterAllSubs: 'جميع التصنيفات الفرعية (15 فرع)',
+    filterAllParents: 'جميع الفئات',
+    filterParentQuality: 'الجودة والرقابة',
+    filterParentSales: 'المبيعات والتجارة',
+    filterAllRegions: 'جميع أقاليم مصر',
+    filterAllBranches: 'جميع الفروع والمتاجر',
     thTxn: 'رقم المعاملة',
     thKw: 'الكلمة المرصودة',
     thSub: 'التصنيف الفرعي',
@@ -15006,10 +15032,10 @@ function applyAppLanguage(lang = 'en') {
   const isAr = lang === 'ar';
   const t = APP_I18N[lang] || APP_I18N.en;
 
-  // Set document direction and language attribute
+  // Language attribute & font styling (Strictly keep dir="ltr" so sidebar and layout never move!)
   document.documentElement.lang = isAr ? 'ar' : 'en';
-  document.documentElement.dir = isAr ? 'rtl' : 'ltr';
-  document.body.classList.toggle('rtl-mode', isAr);
+  document.documentElement.dir = 'ltr';
+  document.body.classList.toggle('ar-lang-active', isAr);
 
   // Update language selector active item & button label
   const activeLangText = document.getElementById('activeLangText');
@@ -15044,6 +15070,64 @@ function applyAppLanguage(lang = 'en') {
   if (uRole) uRole.textContent = t.userRole;
   const saleLbl = document.querySelector('.for-sale-label');
   if (saleLbl) saleLbl.textContent = t.forSaleBtn;
+
+
+  // Panel titles
+  const donutH4 = document.querySelector('.donut-panel .panel-title');
+  if (donutH4) {
+    const icon = donutH4.querySelector('svg');
+    donutH4.textContent = '';
+    if (icon) donutH4.appendChild(icon);
+    donutH4.append(' ' + t.panelDonut);
+  }
+
+  const branchH4 = document.querySelector('.branch-panel .panel-title');
+  if (branchH4) {
+    const icon = branchH4.querySelector('svg');
+    branchH4.textContent = '';
+    if (icon) branchH4.appendChild(icon);
+    branchH4.append(' ' + t.panelBranch);
+  }
+
+  const regH4 = document.querySelector('.region-panel .panel-title');
+  if (regH4) {
+    const icon = regH4.querySelector('svg');
+    regH4.textContent = '';
+    if (icon) regH4.appendChild(icon);
+    regH4.append(' ' + t.panelRegional);
+  }
+
+  const top5H4 = document.querySelector('.top-words-panel .panel-title');
+  if (top5H4) {
+    const icon = top5H4.querySelector('svg');
+    top5H4.textContent = '';
+    if (icon) top5H4.appendChild(icon);
+    top5H4.append(' ' + t.panelTop5);
+  }
+
+  const tableH3 = document.querySelector('.table-card-header .title-left-side h3');
+  if (tableH3) {
+    const icon = tableH3.querySelector('svg');
+    tableH3.textContent = '';
+    if (icon) tableH3.appendChild(icon);
+    tableH3.append(' ' + t.panelTable);
+  }
+
+  // Filter dropdown placeholders
+  const parentFilter = document.getElementById('parentCategoryFilter');
+  if (parentFilter && parentFilter.options.length >= 3) {
+    parentFilter.options[0].textContent = t.filterAllParents;
+    parentFilter.options[1].textContent = t.filterParentQuality;
+    parentFilter.options[2].textContent = t.filterParentSales;
+  }
+  const regFilter = document.getElementById('regionFilter');
+  if (regFilter && regFilter.options.length) regFilter.options[0].textContent = t.filterAllRegions;
+  const storeFilter = document.getElementById('storeFilter');
+  if (storeFilter && storeFilter.options.length) storeFilter.options[0].textContent = t.filterAllBranches;
+
+  // Re-render table and top 5 words so words and badges adapt
+  if (typeof renderDetectionsTable === 'function') renderDetectionsTable();
+  if (typeof renderTop5WordsCloud === 'function') renderTop5WordsCloud(currentOperationalLayer);
 
   // Top Action Bar
   const crumbRoot = document.querySelector('.crumb-root');

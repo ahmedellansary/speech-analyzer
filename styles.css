@@ -6086,74 +6086,10 @@ body.light-theme .enterprise-btn.copy-btn {
 }
 
 /* --------------------------------------------------------------------------
-   RTL ARABIC LAYOUT & FLIP ENGINE (dir="rtl")
+   ARABIC TYPOGRAPHY ENHANCEMENT (WITHOUT MOVING LAYOUT OR SIDEBAR)
    -------------------------------------------------------------------------- */
-html[dir="rtl"],
-body.rtl-mode {
-  direction: rtl;
-  text-align: right;
+body.ar-lang-active {
   font-family: 'Cairo', 'Plus Jakarta Sans', sans-serif !important;
-}
-
-html[dir="rtl"] .left-sidebar,
-body.rtl-mode .left-sidebar {
-  left: auto !important;
-  right: 0 !important;
-  border-right: none !important;
-  border-left: 1px solid var(--border-subtle) !important;
-}
-
-html[dir="rtl"] .main-wrapper,
-body.rtl-mode .main-wrapper {
-  margin-left: 0 !important;
-  margin-right: var(--sidebar-width) !important;
-}
-
-html[dir="rtl"] .lang-menu,
-body.rtl-mode .lang-menu,
-html[dir="rtl"] .export-menu,
-body.rtl-mode .export-menu {
-  right: auto !important;
-  left: 0 !important;
-  text-align: right;
-}
-
-html[dir="rtl"] .lang-menu-item,
-body.rtl-mode .lang-menu-item,
-html[dir="rtl"] .export-menu-item,
-body.rtl-mode .export-menu-item {
-  text-align: right;
-}
-
-html[dir="rtl"] .service-bullets li,
-body.rtl-mode .service-bullets li {
-  padding-left: 0;
-  padding-right: 14px;
-}
-
-html[dir="rtl"] .service-bullets li::before,
-body.rtl-mode .service-bullets li::before {
-  left: auto;
-  right: 0;
-  content: '◂';
-}
-
-html[dir="rtl"] .enterprise-intro-banner,
-body.rtl-mode .enterprise-intro-banner {
-  border-left: 1px solid rgba(255, 255, 255, 0.07);
-  border-right: 3px solid #E00800;
-}
-
-html[dir="rtl"] .crumb-separator,
-body.rtl-mode .crumb-separator {
-  transform: scaleX(-1);
-}
-
-html[dir="rtl"] .date-picker-input,
-body.rtl-mode .date-picker-input,
-html[dir="rtl"] .filter-select,
-body.rtl-mode .filter-select {
-  text-align: right;
 }
 
 /* Light Theme Adaptations for Lang Dropdown */
