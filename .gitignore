@@ -1,0 +1,45 @@
+# ==============================================================================
+# Speech Analyzer - Git Ignore Rules
+# ==============================================================================
+
+# Excel & Raw Proprietary Data
+*.xlsx
+*.xls
+*.csv
+!sample_data.csv
+
+# Internal Scripts & Specs
+Build-DashboardData.ps1
+IT_BACKEND_INTEGRATION_SPECIFICATION.md
+*.bat
+.agents/
+
+# Backups & Temporary Editor Files
+*.bak
+*.tmp
+*.swp
+*~
+*.orig
+
+# Environment variables & Secrets
+.env
+.env.*
+*.pem
+*.key
+*.cert
+*.pfx
+
+# Logs & Debug Scripts
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+test_err.js
+test_*.js
+
+# OS & Workspace Files
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/

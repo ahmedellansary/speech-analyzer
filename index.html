@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+  /* Mobile default: desktop preview (auto-size canvas with horizontal scroll).
+     Opt out with ?layout=mobile. */
+  (function () {
+    try {
+      var q = new URLSearchParams(location.search).get('layout');
+      var touch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      var smallScreen = Math.min(window.screen.width, window.screen.height) < 600;
+      if (q === 'desktop' || (q !== 'mobile' && touch && smallScreen)) {
+        document.documentElement.classList.add('force-desktop');
+      }
+    } catch (e) {}
+  })();
+  </script>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Speech Analyzer | Retail Tech &amp; Electronics Voice Intelligence</title>
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit for high-end corporate typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cairo:wght@500;600;700&display=swap" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="chart.umd.min.js" integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4" crossorigin="anonymous"></script>
+  <script src="pptxgen.bundle.js" integrity="sha384-Cck14aA9cifjYolcnjebXRfWGkz5ltHMBiG4px/j8GS+xQcb7OhNQWZYyWjQ+UwQ" crossorigin="anonymous"></script>
+  <script src="xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-theme">
+  <div class="app-layout">
+    <!-- Left Sidebar Navigation -->
+    <aside class="left-sidebar">
+      <!-- Speech Analyzer Brand Logo -->
+      <div class="sidebar-brand">
+        <div class="brand-logo-container">
+          <div class="brand-icon-wrap" title="Speech Analyzer AI">
+            <svg class="brand-logo-svg" width="38" height="38" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="36" height="36" rx="9" fill="#E00800"/>
+              <rect x="7" y="15" width="2.8" height="6" rx="1.4" fill="white" fill-opacity="0.85"/>
+              <rect x="12" y="11" width="2.8" height="14" rx="1.4" fill="white"/>
+              <rect x="17" y="6.5" width="2.8" height="23" rx="1.4" fill="white"/>
+              <rect x="22" y="10" width="2.8" height="16" rx="1.4" fill="white"/>
+              <rect x="27" y="14" width="2.8" height="8" rx="1.4" fill="white" fill-opacity="0.85"/>
+            </svg>
+          </div>
+          <div class="brand-divider-line"></div>
+          <div class="brand-title-wrap">
+            <span class="brand-main-title">Speech Analyzer</span>
+            <span class="brand-main-sub">Tech Retail Voice Intelligence</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Links: 3 Operational Layers -->
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">MONITORING LAYERS</div>
+        <!-- Layer 1: Comprehensive (Both Sales & Quality) -->
+        <button class="nav-item active" data-layer="ALL" id="layerOverviewBtn">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Overview (All Retail)</span>
+        </button>
+
+        <!-- Layer 2: Quality (7 Sub-Categories) -->
+        <button class="nav-item" data-layer="KPI" id="layerKpiBtn">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+          <span>Quality</span>
+          <span class="nav-badge kpi-count-badge">7 Sub</span>
+        </button>
+
+        <!-- Layer 3: Sales (8 Sub-Categories) -->
+        <button class="nav-item" data-layer="Audit" id="layerAuditBtn">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span>Sales</span>
+          <span class="nav-badge audit-count-badge">8 Sub</span>
+        </button>
+
+        <div class="nav-section-title">EXPLORATION & TOOLS</div>
+        <button class="nav-item" id="sidebarTaxonomyBtn">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+          <span>Retail Tech Dictionary</span>
+          <span class="nav-badge count">15</span>
+        </button>
+      </nav>
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer">
+          <!-- Date title above the calendar: same look as sidebar nav rows -->
+          <div class="date-title-row">
+            <svg class="date-title-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span class="date-title-text">Date Range & Comparison</span>
+          </div>
+
+          <!-- Custom Calendar Date Range Picker -->
+          <div class="sidebar-date-card" id="calendarCard">
+            <!-- Calendar Navigation -->
+            <div class="calendar-nav">
+              <button class="cal-nav-btn" id="calPrevMonth" title="Previous Month">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <span class="cal-month-year" id="calMonthYear">October 2026</span>
+              <button class="cal-nav-btn" id="calNextMonth" title="Next Month">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+
+            <!-- Calendar Grid -->
+            <div class="calendar-grid" id="calendarGrid">
+              <!-- Day headers -->
+              <div class="cal-day-header">Sun</div>
+              <div class="cal-day-header">Mon</div>
+              <div class="cal-day-header">Tue</div>
+              <div class="cal-day-header">Wed</div>
+              <div class="cal-day-header">Thu</div>
+              <div class="cal-day-header">Fri</div>
+              <div class="cal-day-header">Sat</div>
+              <!-- Days injected via JS -->
+            </div>
+          </div>
+
+        <div class="user-profile-card" id="userProfileCard" title="Speech Analyzer User Profile">
+          <div class="user-avatar-circle">
+            <svg class="user-avatar-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="user-online-dot"></span>
+          </div>
+          <div class="user-details-wrap">
+            <span class="user-card-name">Tech Care Lead</span>
+            <span class="user-card-role">Electronics &amp; Retail QA</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <!-- Top Action Bar -->
+      <header class="top-action-bar">
+        <div class="header-breadcrumb">
+          <span class="crumb-root">Speech Analyzer</span>
+          <span class="crumb-separator">/</span>
+          <span class="crumb-current" id="activeLayerBreadcrumb">Overview (Combined)</span>
+        </div>
+
+        <div class="header-controls">
+          <!-- Dynamic Month-over-Month Comparison Summary Badge -->
+          <div class="header-comparison-pill" id="headerComparisonPill" title="Dynamic Month-over-Month comparison">
+            <span class="comp-pill-label">Comparison</span>
+            <span class="pulse-indicator"></span>
+            <span class="comp-pill-text" id="headerCompText">01 Sep 2026 – 02 Sep 2026 vs 01 Oct 2026 – 02 Oct 2026</span>
+          </div>
+
+          <!-- Import Sheet Button — directly to the left of Export -->
+          <button id="headerImportSheetBtn" class="header-import-btn" title="Import Sheet (Excel .xlsx / .csv)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <span>Import Sheet</span>
+            <input type="file" id="sheetFileInput" accept=".csv, .xlsx, .xls" style="display: none;" />
+          </button>
+
+          <div class="export-dropdown" id="exportDropdown">
+            <button id="exportMenuBtn" class="brand-btn secondary" title="Download reports">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Export</span>
+              <svg class="chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="export-menu" id="exportMenu" role="menu">
+              <button class="export-menu-item" id="exportPptBtn" role="menuitem" title="Download visible dashboard as PowerPoint (.pptx)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"></rect><path d="M10 9l4 2.5-4 2.5z"></path><line x1="8" y1="21" x2="16" y2="21"></line></svg>
+                <span class="export-menu-text"><span class="export-menu-title">Export PPT</span><span class="export-menu-hint">Dashboard slides (.pptx)</span></span>
+              </button>
+              <button class="export-menu-item" id="exportRawBtn" role="menuitem" title="Download raw detection records for a date range (.csv)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+                <span class="export-menu-text"><span class="export-menu-title">Export Raw Data</span><span class="export-menu-hint">Date range records (.csv)</span></span>
+              </button>
+              <button class="export-menu-item" id="exportHtmlBtn" role="menuitem" title="Download this dashboard as a single offline HTML file">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                <span class="export-menu-text"><span class="export-menu-title">Export HTML</span><span class="export-menu-hint">Offline single-file page (.html)</span></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Theme Switcher Icon Button — Far Right -->
+          <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Light / Dark Mode" aria-label="Toggle Theme">
+            <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+            <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Dashboard Body -->
+      <main class="dashboard-body">
+
+        <!-- Global Cross-Filter Active Banner -->
+        <div class="active-crossfilter-bar is-hidden" id="activeCrossFilterBar">
+          <div class="filter-pill-status">
+            <span class="crossfilter-pulse"></span>
+            <span class="crossfilter-label">Active Filter:</span>
+            <span class="crossfilter-value" id="crossFilterValueText"></span>
+            <span class="crossfilter-hint">(Click same item again or click button to clear)</span>
+          </div>
+          <button class="crossfilter-clear-btn" id="crossFilterClearBtn" title="Clear filter and show all data">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <span>Clear Filter</span>
+          </button>
+        </div>
+
+        <!-- Top Charts Row: Ratio Donut & Regional Operations Side-by-Side -->
+        <section class="top-charts-row" id="topChartsRow">
+
+          <!-- Regional Operations: Bar columns in all layers -->
+          <div class="chart-panel region-panel">
+            <div class="panel-header">
+              <div class="panel-title-wrap">
+                <h4 class="panel-title"><svg class="title-left-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span>Tech Store &amp; Regional Operations</span></h4>
+                <p id="regionChartSubtitle">Customer voice interactions across store branches &amp; regions</p>
+              </div>
+            </div>
+            <div class="regional-operations-card-layout" id="regionalOperationsCardLayout">
+              <!-- Left Column: Regional Stats & Dual Comparison Bars -->
+              <div class="region-stats-col">
+                <div class="region-stats-list" id="regionStatsList">
+                  <!-- Greater Cairo -->
+                  <div class="region-stat-item" data-region="Greater Cairo" role="button" tabindex="0" title="Click to filter by Greater Cairo">
+                    <div class="region-stat-badge cairo-badge">
+                      <span class="region-stat-name">Greater Cairo</span>
+                    </div>
+                    <div class="region-stat-details">
+                      <div class="region-stat-numbers">
+                        <span class="stat-count-main" id="countCairo">160</span>
+                        <span class="stat-tag-current cairo-tag">Current</span>
+                        <span class="stat-tag-prev"><strong id="prevCairo">27</strong> Previous</span>
+                      </div>
+                      <div class="region-stat-bar-track">
+                        <div class="region-stat-bar-fill cairo-fill" id="barCairoCurr" style="width: 78%;"></div>
+                        <div class="region-stat-bar-prev" id="barCairoPrev" style="width: 22%;"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Alex -->
+                  <div class="region-stat-item" data-region="Alex" role="button" tabindex="0" title="Click to filter by Alex">
+                    <div class="region-stat-badge alex-badge">
+                      <span class="region-stat-name">Alex</span>
+                    </div>
+                    <div class="region-stat-details">
+                      <div class="region-stat-numbers">
+                        <span class="stat-count-main" id="countAlex">109</span>
+                        <span class="stat-tag-current dark-tag">Current</span>
+                        <span class="stat-tag-prev"><strong id="prevAlex">27</strong> Previous</span>
+                      </div>
+                      <div class="region-stat-bar-track">
+                        <div class="region-stat-bar-fill dark-fill" id="barAlexCurr" style="width: 65%;"></div>
+                        <div class="region-stat-bar-prev" id="barAlexPrev" style="width: 22%;"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Delta -->
+                  <div class="region-stat-item" data-region="Delta" role="button" tabindex="0" title="Click to filter by Delta">
+                    <div class="region-stat-badge delta-badge">
+                      <span class="region-stat-name">Delta</span>
+                    </div>
+                    <div class="region-stat-details">
+                      <div class="region-stat-numbers">
+                        <span class="stat-count-main" id="countDelta">87</span>
+                        <span class="stat-tag-current gray-tag">Current</span>
+                        <span class="stat-tag-prev"><strong id="prevDelta">28</strong> Previous</span>
+                      </div>
+                      <div class="region-stat-bar-track">
+                        <div class="region-stat-bar-fill gray-fill" id="barDeltaCurr" style="width: 55%;"></div>
+                        <div class="region-stat-bar-prev" id="barDeltaPrev" style="width: 24%;"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Upper -->
+                  <div class="region-stat-item" data-region="Upper" role="button" tabindex="0" title="Click to filter by Upper">
+                    <div class="region-stat-badge upper-badge">
+                      <span class="region-stat-name">Upper</span>
+                    </div>
+                    <div class="region-stat-details">
+                      <div class="region-stat-numbers">
+                        <span class="stat-count-main" id="countUpper">76</span>
+                        <span class="stat-tag-current black-tag">Current</span>
+                        <span class="stat-tag-prev"><strong id="prevUpper">30</strong> Previous</span>
+                      </div>
+                      <div class="region-stat-bar-track">
+                        <div class="region-stat-bar-fill black-fill" id="barUpperCurr" style="width: 48%;"></div>
+                        <div class="region-stat-bar-prev" id="barUpperPrev" style="width: 26%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Bottom Legend -->
+                <div class="region-map-legend">
+                  <div class="legend-item"><span class="legend-square current-sq"></span> <span>Current (red/black)</span></div>
+                  <div class="legend-item"><span class="legend-square prev-sq"></span> <span>Previous (gray)</span></div>
+                </div>
+              </div>
+
+              <!-- Right Column: Interactive Egypt Map with Sliced Regional Layers & Pins -->
+              <div class="region-map-col">
+                <div class="egypt-map-container" id="egyptMapContainer">
+                  <svg viewBox="0 0 520 400" class="egypt-map-svg" preserveAspectRatio="xMidYMid meet" id="egyptMapSvg">
+                    <defs>
+                      <filter id="pinShadow" x="-30%" y="-30%" width="160%" height="160%">
+                        <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-opacity="0.32"/>
+                      </filter>
+                    </defs>
+
+                    <!-- Background boundaries -->
+                    <g class="map-bg-borders" opacity="0.4" stroke="#94A3B8" stroke-width="1" fill="none">
+                      <line x1="120" y1="50" x2="120" y2="380" stroke-dasharray="3,3" />
+                      <line x1="120" y1="380" x2="440" y2="380" stroke-dasharray="3,3" />
+                      <path d="M 368 115 L 435 50 M 435 50 L 460 70 M 378 155 L 435 155" stroke-dasharray="2,2" />
+                    </g>
+
+                    <!-- Neighboring land silhouettes (Sinai / Red Sea) -->
+                    <path class="map-land-sinai" d="M 335 102 L 368 115 L 378 155 L 360 195 L 332 145 Z" fill="#E2E8F0" opacity="0.65" stroke="#CBD5E1" stroke-width="0.8" />
+                    <path class="map-redsea-coast" d="M 332 145 L 360 195 L 385 270 L 420 345 L 440 380" fill="none" stroke="#CBD5E1" stroke-width="1.2" opacity="0.75" />
+
+                    <!-- ==============================================
+                         4 SLICED REGIONAL LAYERS
+                         ============================================== -->
+
+                    <!-- 1. Upper Egypt Layer (Southern/Western landmass) -->
+                    <g class="map-region-layer" data-region="Upper" id="mapRegUpper" role="button" tabindex="0">
+                      <path class="reg-shape reg-shape-upper"
+                            d="M 120 95 L 195 112 L 175 140 L 175 185 L 225 155 L 265 118 L 278 132 L 280 148 L 298 165 L 320 168 L 332 145 L 360 195 L 385 270 L 420 345 L 440 380 L 120 380 Z"
+                            fill="#0F172A" stroke="#FFFFFF" stroke-width="1.8" />
+                    </g>
+
+                    <!-- 2. Alex Region Layer (Northwestern Mediterranean approach) -->
+                    <g class="map-region-layer" data-region="Alex" id="mapRegAlex" role="button" tabindex="0">
+                      <path class="reg-shape reg-shape-alex"
+                            d="M 175 185 L 225 155 L 265 118 L 275 96 L 255 100 L 225 106 L 195 112 L 175 140 Z"
+                            fill="#334155" stroke="#FFFFFF" stroke-width="1.8" />
+                    </g>
+
+                    <!-- 3. Delta Region Layer (Northern Delta fan) -->
+                    <g class="map-region-layer" data-region="Delta" id="mapRegDelta" role="button" tabindex="0">
+                      <path class="reg-shape reg-shape-delta"
+                            d="M 275 96 L 292 88 L 315 88 L 335 102 L 330 125 L 318 128 L 302 124 L 285 118 L 275 110 Z"
+                            fill="#64748B" stroke="#FFFFFF" stroke-width="1.8" />
+                    </g>
+
+                    <!-- 4. Greater Cairo Region Layer (Red Central Hub) -->
+                    <g class="map-region-layer" data-region="Greater Cairo" id="mapRegCairo" role="button" tabindex="0">
+                      <path class="reg-shape reg-shape-cairo"
+                            d="M 285 118 L 302 124 L 318 128 L 330 148 L 320 168 L 298 165 L 280 148 L 278 132 Z"
+                            fill="#E00800" stroke="#FFFFFF" stroke-width="1.8" />
+                    </g>
+
+                    <!-- Nile River Ribbon -->
+                    <path class="map-nile-river"
+                          d="M 342 380 C 342 350, 345 320, 350 295 C 353 280, 358 265, 345 250 C 335 240, 335 220, 330 200 C 325 180, 318 165, 308 140"
+                          fill="none" stroke="#64748B" stroke-width="2.5" opacity="0.6" stroke-linecap="round" />
+
+                    <!-- Lake Nasser footprint -->
+                    <path d="M 338 360 C 344 365, 340 375, 345 380" fill="none" stroke="#64748B" stroke-width="4" opacity="0.7" />
+
+                    <!-- ==============================================
+                         4 INTERACTIVE REGION PINS
+                         ============================================== -->
+
+                    <!-- Pin: Alex (235, 75) -->
+                    <g class="map-pin-group" data-region="Alex" id="pinAlex" transform="translate(235, 75)" role="button" tabindex="0" filter="url(#pinShadow)">
+                      <rect x="-8" y="-18" width="76" height="24" rx="4" fill="#0F172A" stroke="#FFFFFF" stroke-width="1.2" />
+                      <text x="30" y="-2" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">Alex <tspan font-weight="800" id="pinAlexVal">109</tspan></text>
+                      <path d="M -2 6 C -2 14, 6 22, 6 22 C 6 22, 14 14, 14 6 C 14 0, -2 0, -2 6 Z" fill="#0F172A" stroke="#FFFFFF" stroke-width="1" transform="translate(18, 0) scale(0.7)" />
+                      <circle cx="22" cy="4" r="2" fill="#FFFFFF" />
+                    </g>
+
+                    <!-- Pin: Delta (305, 60) -->
+                    <g class="map-pin-group" data-region="Delta" id="pinDelta" transform="translate(305, 60)" role="button" tabindex="0" filter="url(#pinShadow)">
+                      <rect x="-8" y="-18" width="76" height="24" rx="4" fill="#64748B" stroke="#FFFFFF" stroke-width="1.2" />
+                      <text x="30" y="-2" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">Delta <tspan font-weight="800" id="pinDeltaVal">87</tspan></text>
+                      <path d="M -2 6 C -2 14, 6 22, 6 22 C 6 22, 14 14, 14 6 C 14 0, -2 0, -2 6 Z" fill="#64748B" stroke="#FFFFFF" stroke-width="1" transform="translate(18, 0) scale(0.7)" />
+                      <circle cx="22" cy="4" r="2" fill="#FFFFFF" />
+                    </g>
+
+                    <!-- Pin: Greater Cairo (305, 115) -->
+                    <g class="map-pin-group" data-region="Greater Cairo" id="pinCairo" transform="translate(305, 115)" role="button" tabindex="0" filter="url(#pinShadow)">
+                      <path d="M -8 8 C -8 18, 4 28, 4 28 C 4 28, 16 18, 16 8 C 16 -1, -8 -1, -8 8 Z" fill="#E00800" stroke="#FFFFFF" stroke-width="1.4" transform="translate(0, -6)" />
+                      <circle cx="4" cy="2" r="3" fill="#FFFFFF" />
+                      <rect x="22" y="-9" width="130" height="24" rx="4" fill="#E00800" stroke="#FFFFFF" stroke-width="1.2" />
+                      <text x="87" y="7" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">Greater Cairo <tspan font-weight="800" id="pinCairoVal">160</tspan></text>
+                    </g>
+
+                    <!-- Pin: Upper (330, 230) -->
+                    <g class="map-pin-group" data-region="Upper" id="pinUpper" transform="translate(330, 230)" role="button" tabindex="0" filter="url(#pinShadow)">
+                      <path d="M -8 8 C -8 18, 4 28, 4 28 C 4 28, 16 18, 16 8 C 16 -1, -8 -1, -8 8 Z" fill="#0F172A" stroke="#FFFFFF" stroke-width="1.2" transform="translate(0, -6)" />
+                      <circle cx="4" cy="2" r="3" fill="#FFFFFF" />
+                      <rect x="20" y="-9" width="80" height="24" rx="4" fill="#0F172A" stroke="#FFFFFF" stroke-width="1.2" />
+                      <text x="60" y="7" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">Upper <tspan font-weight="800" id="pinUpperVal">76</tspan></text>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top 5 Spotted Words (Voice Intelligence Cloud) - Top Right -->
+          <div class="chart-panel top-words-panel" id="topWordsCloudCard">
+            <div class="panel-header">
+              <div class="panel-title-wrap">
+                <h4 class="panel-title">
+                  <svg class="title-left-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                  </svg>
+                  <span>Top Trending Tech Keywords</span>
+                </h4>
+                <p id="topWordsSubtitle">Most detected keywords in store sales &amp; support calls</p>
+              </div>
+              <div class="panel-header-actions">
+                <span class="panel-badge-pill" id="topWordsLayerTag">ALL TECH CATEGORIES</span>
+              </div>
+            </div>
+
+            <!-- Organic Voice Cloud Visualizer Stage -->
+            <div class="speech-cloud-visualizer" id="speechCloudVisualizer">
+              <!-- Expressive Voice / Speaking Avatar with Sound Wave Ripples -->
+              <div class="speaker-avatar-wrap" id="speakerAvatarWrap" title="Customer & Agent Acoustic Voice Stream">
+                <div class="speaker-rings-pulse"></div>
+                <div class="speaker-avatar-icon">
+                  <svg class="speaker-svg" viewBox="0 0 64 64" fill="none">
+                    <circle cx="24" cy="32" r="18" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.4" class="sound-arc-outer"></circle>
+                    <path d="M42 22C45.5 25.5 47 28.5 47 32C47 35.5 45.5 38.5 42 42" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="sound-wave-1"></path>
+                    <path d="M48 16C53 21 55 26 55 32C55 38 53 43 48 48" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" class="sound-wave-2"></path>
+                    <path d="M14 44V20C14 16.6863 16.6863 14 20 14H24L36 6V58L24 50H20C16.6863 50 14 47.3137 14 44Z" fill="currentColor" fill-opacity="0.18" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"></path>
+                    <circle cx="23" cy="32" r="3.5" fill="currentColor"></circle>
+                  </svg>
+                </div>
+                <span class="speaker-label">VOICE STREAM</span>
+              </div>
+
+              <!-- Floating Speech Bubbles Container (Populated via JS) -->
+              <div class="speech-bubbles-stage" id="speechBubblesStage">
+                <!-- Dynamic speech bubbles rendered here -->
+              </div>
+            </div>
+
+            <!-- Quick Mini Legend / Stats Bar -->
+            <div class="top-words-footer">
+              <span class="top-words-footer-note">⚡ Click any bubble to filter live detections</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Pillar Trend (Overview only): Quality & Sales side-by-side, since 01 Jan -->
+        <section class="pillar-trend-row" id="pillarTrendRow">
+          <div class="pillar-trend-toolbar">
+            <div class="panel-title-wrap">
+              <h4 class="panel-title"><svg class="title-left-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg><span>Retail Performance Trends — Year to Date</span></h4>
+              <p id="pillarTrendSubtitle">Quality vs Sales since 01 Jan 2026</p>
+            </div>
+            <div class="pillar-trend-controls">
+              <label class="trend-control-label" for="trendGranularitySelect">Granularity</label>
+              <select id="trendGranularitySelect" class="filter-select trend-gran-select" title="Trend granularity" aria-label="Trend granularity">
+                <option value="week">Weekly</option>
+                <option value="month" selected="selected">Monthly</option>
+                <option value="quarter">Quarterly</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pillar-trend-grid">
+            <!-- Box 1: Quality pillar — title left/total right, names on their lines -->
+            <div class="chart-panel pillar-trend-panel kpi">
+              <div class="trend-box-title">
+                <span class="trend-box-title-left"><span class="trend-dot kpi"></span><span>Quality Trend</span></span>
+                <span class="trend-total-pill" id="kpiTrendTotal">—</span>
+              </div>
+              <p class="trend-box-range" id="kpiTrendRange">Monthly view</p>
+              <div class="chart-canvas-container trend-chart-box">
+                <canvas id="kpiTrendLine"></canvas>
+                <div class="trend-empty-note is-hidden" id="kpiTrendEmpty"></div>
+              </div>
+              <div class="trend-panel-foot"><span id="kpiTrendFoot"></span></div>
+            </div>
+
+            <!-- Box 2: Sales pillar — title left/total right, names on their lines -->
+            <div class="chart-panel pillar-trend-panel audit">
+              <div class="trend-box-title">
+                <span class="trend-box-title-left"><span class="trend-dot audit"></span><span>Sales Trend</span></span>
+                <span class="trend-total-pill" id="auditTrendTotal">—</span>
+              </div>
+              <p class="trend-box-range" id="auditTrendRange">Monthly view</p>
+              <div class="chart-canvas-container trend-chart-box">
+                <canvas id="auditTrendLine"></canvas>
+                <div class="trend-empty-note is-hidden" id="auditTrendEmpty"></div>
+              </div>
+              <div class="trend-panel-foot"><span id="auditTrendFoot"></span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Side-by-Side: Parent Branch Sub-Categories (Left) & Volume Breakdown Bar Chart (Right) -->
+        <section class="branch-chart-side-grid" id="branchChartSideGrid">
+          <span id="metricTotalDetections" class="is-hidden">1,542</span>
+
+          <!-- Month-over-Month title box for the two branch breakdown panels -->
+          <div class="pillar-trend-toolbar" id="momCompareToolbar">
+            <div class="panel-title-wrap">
+              <h4 class="panel-title"><svg class="title-left-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg><span>Retail Month-over-Month Comparison</span></h4>
+              <p id="momCompareSubtitle">Current vs previous month — Quality vs Sales</p>
+            </div>
+          </div>
+
+          <!-- Left Column: Parent Branches & Their Sub-Category Cards -->
+          <div class="branches-side-col">
+            <!-- Branch 01: Quality -->
+            <div class="parent-branch-row kpi-branch-row" id="parentBranchKpi">
+              <div class="branch-row-header kpi">
+                <div class="branch-header-left">
+                  <h3 class="branch-name"><svg class="branch-name-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>Quality</h3>
+                  <span class="branch-summary-meta">7 Performance Categories • Staff Attitude, Escalation, Satisfaction &amp; Protection</span>
+                </div>
+                <div class="branch-header-right">
+                  <span class="branch-stat-label">Total Detections:</span>
+                  <span class="branch-stat-val kpi" id="metricKpiDetections">644</span>
+                  <span class="branch-share-badge kpi">41.8% Share</span>
+                  <span class="branch-mom-delta positive" id="kpiMoMDelta">+6.3% MoM</span>
+                </div>
+              </div>
+
+              <div class="chart-panel branch-chart-panel">
+                <div class="chart-canvas-container kpi-chart-box">
+                  <canvas id="kpiSubBarChart"></canvas>
+                </div>
+                <div class="split-compare-list" id="kpiCompareList"></div>
+              </div>
+            </div>
+
+            <!-- Branch 02: Sales -->
+            <div class="parent-branch-row audit-branch-row" id="parentBranchAudit">
+              <div class="branch-row-header audit">
+                <div class="branch-header-left">
+                  <h3 class="branch-name"><svg class="branch-name-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Sales</h3>
+                  <span class="branch-summary-meta">8 Product Categories • Laptops, Mobiles, TVs, Appliances &amp; Installments</span>
+                </div>
+                <div class="branch-header-right">
+                  <span class="branch-stat-label">Total Sales:</span>
+                  <span class="branch-stat-val audit" id="metricAuditDetections">$898</span>
+                  <span class="branch-share-badge audit">58.2% Share</span>
+                  <span class="branch-mom-delta positive" id="auditMoMDelta">+11.0% MoM</span>
+                </div>
+              </div>
+
+              <div class="chart-panel branch-chart-panel">
+                <div class="chart-canvas-container audit-chart-box">
+                  <canvas id="auditSubBarChart"></canvas>
+                </div>
+                <div class="split-compare-list" id="auditCompareList"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Recent Keyword Detections Table (Exact matching user screenshot specifications) -->
+        <section class="table-container-section" id="detectionsTableSection">
+          <div class="detections-card">
+            <!-- Table Header Matching User Image -->
+            <div class="card-top-row">
+              <div class="title-with-counter">
+                <div class="title-heading-row">
+                  <h3 class="table-main-title"><svg class="title-left-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg><span id="tableMainTitle">Recent Store &amp; Support Customer Interactions</span></h3>
+                  <span class="layer-context-chip" id="tableLayerIndicator">All Tech Categories</span>
+                </div>
+                <span class="records-counter-label" id="recordsCounterDisplay">Showing 6 of 6 records</span>
+              </div>
+
+              <!-- Filter Controls Toolbar -->
+              <div class="table-actions-toolbar">
+                <div class="search-box-wrap">
+                  <svg class="search-glass-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                  <input type="text" id="keywordSearchInput" placeholder="Filter by keyword (e.g. Laptop, iPhone, Installments, Warranty), agent, store...">
+                </div>
+
+                <div class="filter-dropdowns">
+                  <select id="parentCategoryFilter" class="filter-select" title="Filter by Parent Category" aria-label="Filter by Parent Category">
+                    <option value="ALL">All Categories</option>
+                    <option value="KPI">Quality</option>
+                    <option value="Audit">Sales</option>
+                  </select>
+
+                  <select id="subCategoryFilter" class="filter-select" title="Filter by Sub-Category" aria-label="Filter by Sub-Category">
+                    <option value="ALL">All Sub-Categories</option>
+                    <!-- Populated dynamically via JS -->
+                  </select>
+
+                  <select id="regionFilterSelect" class="filter-select" title="Filter by Region" aria-label="Filter by Region">
+                    <option value="ALL">All Regions</option>
+                    <option value="Greater Cairo">Greater Cairo</option>
+                    <option value="Alex">Alex</option>
+                    <option value="Delta">Delta</option>
+                    <option value="Upper">Upper</option>
+                  </select>
+
+                  <select id="rowsPerPageSelect" class="filter-select" title="Rows per page" aria-label="Rows per page">
+                    <option value="10" selected>10 rows</option>
+                    <option value="25">25 rows</option>
+                    <option value="50">50 rows</option>
+                    <option value="100">100 rows</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Table Responsive Wrap -->
+            <div class="table-scroll-wrap">
+              <table class="styled-detections-table">
+                <thead>
+                  <tr>
+                    <th class="th-txnid">Transaction number</th>
+                    <th class="th-keyword">Detected Keyword</th>
+                    <th class="th-subcat">Sub-Category</th>
+                    <th class="th-category">Category</th>
+                    <th class="th-time">Date &amp; Time</th>
+                    <th class="th-storemgr">Store Manager</th>
+                    <th class="th-agent">Agent Name</th>
+                    <th class="th-agentid">Agent ID</th>
+                    <th class="th-branch">Store</th>
+                    <th class="th-region">Region</th>
+                    <th class="th-camera">Camera ID</th>
+                  </tr>
+                </thead>
+                <tbody id="detectionsTbody">
+                  <!-- Rows injected via app.js -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Table Card Footer -->
+            <div class="card-bottom-row">
+              <div class="dataset-status-pill">
+                <span class="status-dot-emerald"></span>
+                <span id="tableDataSourceLabel">Imported Sheet Dataset</span>
+              </div>
+              <div class="table-pagination-nav">
+                <button id="tablePrevBtn" class="pg-btn" disabled>Previous</button>
+                <span class="pg-indicator" id="tablePageText">Page 1 of 1</span>
+                <button id="tableNextBtn" class="pg-btn">Next</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Call Dialogue Tester Modal -->
+  <div class="modal-backdrop" id="callTesterModal">
+    <div class="modal-dialog">
+      <div class="dialog-header">
+        <div class="dialog-title-info">
+          <h3><svg class="title-left-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>Retail Dialogue &amp; Voice Spotter</h3>
+          <p>Paste a customer–agent dialogue to instantly spot keywords across Laptops, Smartphones, Accessories, Installments &amp; Store Policies.</p>
+        </div>
+        <button class="dialog-close" id="closeTesterModalBtn">&times;</button>
+      </div>
+
+      <div class="dialog-body">
+        <div class="sample-prompts-row">
+            <span class="prompt-hint">Try an example:</span>
+            <button class="prompt-chip" data-text="العميل: انا اشتريت لابتوب جيمنج من المعرض وطلع فيه عيب صناعة في الشاشة، عايز اكلم المشرف فوراً والا هعمل شكوى في جهاز حماية المستهلك 19588">Escalation & Legal</button>
+            <button class="prompt-chip" data-text="الموظف: تحت أمرك يا فندم، متاح حالياً تقسيط بدون فوائد وبدون مقدم على شاشات سمارت وموبايلات بالتعاون مع ميني كاش وفاليو">Installments & Offers</button>
+            <button class="prompt-chip" data-text="العميل: بتابع شحنة تكييف واجهزة منزلية ومندوب التوصيل اتأخر عن ميعاد الاستلام المحدد مع شركة الشحن">Delivery & Tracking</button>
+            <button class="prompt-chip" data-text="العميل: شكراً جزيلاً للبائع أحمد في فرع مول العرب ساعدني في اختيار اللابتوب المناسب وطبعلي الفاتورة الضريبية وفعل الضمان">WOW Moment</button>
+          </div>
+
+          <textarea id="dialogueInputArea" placeholder="Enter transcript in Arabic or English to spot keywords..."></textarea>
+
+        <div class="dialogue-meta-grid">
+          <div class="input-unit">
+            <label for="testerAgentInput">Agent Name</label>
+            <input type="text" id="testerAgentInput" name="testerAgentInput" value="Ahmed Hassan" placeholder="Enter agent name" title="Agent Name">
+          </div>
+          <div class="input-unit">
+            <label for="testerBranchInput">Store</label>
+            <select id="testerBranchInput" name="testerBranchInput" title="Select Store" aria-label="Select Store">
+              <option value="Abbas El Akkad">Abbas El Akkad</option>
+              <option value="Korba Heliopolis">Korba Heliopolis</option>
+              <option value="5th Settlement">5th Settlement</option>
+              <option value="San Stefano">San Stefano</option>
+              <option value="Smouha Square">Smouha Square</option>
+              <option value="Gleem Corniche">Gleem Corniche</option>
+              <option value="Mansoura Geish St">Mansoura Geish St</option>
+              <option value="Tanta Galaa St">Tanta Galaa St</option>
+              <option value="Assiut Gomhouria">Assiut Gomhouria</option>
+              <option value="Luxor Television St">Luxor Television St</option>
+              <option value="Citystars">Citystars</option>
+              <option value="Mall of Arabia">Mall of Arabia</option>
+              <option value="Mohandessin">Mohandessin</option>
+            </select>
+          </div>
+          <div class="input-unit">
+            <label for="testerRegionInput">Region</label>
+            <select id="testerRegionInput" name="testerRegionInput" title="Select Region" aria-label="Select Region">
+              <option value="Greater Cairo">Greater Cairo</option>
+              <option value="Alex">Alex</option>
+              <option value="Delta">Delta</option>
+              <option value="Upper">Upper</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="matches-feedback-container is-hidden" id="testerFeedbackBox">
+          <h5>Spotted Keywords in Dialogue:</h5>
+          <div class="spotted-chips-wrapper" id="testerChipsContainer"></div>
+        </div>
+      </div>
+
+      <div class="dialog-footer">
+        <button class="dialog-btn text-btn" id="clearTesterTextBtn">Clear</button>
+        <button class="dialog-btn primary-btn" id="analyzeAndLogBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>Spot &amp; Log to Dashboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full 15-Category Taxonomy Explorer Modal -->
+  <div class="modal-backdrop" id="taxonomyExplorerModal">
+    <div class="modal-dialog wide-dialog">
+      <div class="dialog-header">
+        <div class="dialog-title-info">
+          <h3><svg class="title-left-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>Retail Tech Keyword Dictionary · 15 Categories</h3>
+          <p>Structured keyword dictionary organized into Sales and Quality.</p>
+        </div>
+        <button class="dialog-close" id="closeTaxonomyModalBtn">&times;</button>
+      </div>
+
+      <div class="dialog-body">
+        <div class="taxonomy-search-strip">
+          <input type="text" id="taxonomySearchBox" placeholder="Search dictionary for any Arabic or English word...">
+        </div>
+        <div class="taxonomy-matrix-wrapper" id="taxonomyMatrixContainer">
+          <!-- Populated dynamically via JS with separated KPI and Audit sections -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export Raw Data Modal -->
+  <div class="modal-backdrop" id="rawDataModal">
+    <div class="modal-dialog">
+      <div class="dialog-header">
+        <div class="dialog-title-info">
+          <h3><svg class="title-left-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>Export Raw Data</h3>
+          <p>Click a start day, then an end day — same calendar as the sidebar.</p>
+        </div>
+        <button class="dialog-close" id="closeRawDataModalBtn">&times;</button>
+      </div>
+      <div class="dialog-body">
+        <div class="selected-range-display">
+          <span class="range-label">From</span>
+          <span class="range-value" id="rawFromDisplay">—</span>
+          <span class="range-separator">→</span>
+          <span class="range-label">To</span>
+          <span class="range-value" id="rawToDisplay">—</span>
+        </div>
+        <div class="raw-cal">
+          <div class="calendar-nav">
+            <button class="cal-nav-btn" id="rawCalPrev" title="Previous Month">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <span class="cal-month-year" id="rawCalMonth"></span>
+            <button class="cal-nav-btn" id="rawCalNext" title="Next Month">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+          <div class="calendar-grid" id="rawCalGrid">
+            <div class="cal-day-header">Sun</div>
+            <div class="cal-day-header">Mon</div>
+            <div class="cal-day-header">Tue</div>
+            <div class="cal-day-header">Wed</div>
+            <div class="cal-day-header">Thu</div>
+            <div class="cal-day-header">Fri</div>
+            <div class="cal-day-header">Sat</div>
+          </div>
+        </div>
+        <span class="prompt-hint" id="rawRangeHint"></span>
+      </div>
+      <div class="dialog-footer">
+        <button class="dialog-btn text-btn" id="rawExportCancelBtn">Cancel</button>
+        <button class="dialog-btn primary-btn" id="rawExportConfirmBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Export CSV</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Popup -->
+  <div class="status-toast" id="statusToast">
+    <span class="toast-bullet">●</span>
+    <span class="toast-text" id="toastStatusText">Detection stream active</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
