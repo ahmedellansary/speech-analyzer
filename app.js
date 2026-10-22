@@ -14060,6 +14060,61 @@ function setupEventListeners() {
   if (viewAllBtn) viewAllBtn.addEventListener('click', openTaxonomy);
   document.getElementById('closeTaxonomyModalBtn').addEventListener('click', closeTaxonomy);
 
+  // Enterprise Solutions & For Sale Modal Controls
+  const enterpriseModal = document.getElementById('enterpriseSolutionsModal');
+  const openEnterpriseModal = () => {
+    if (enterpriseModal) enterpriseModal.classList.add('active');
+  };
+  const closeEnterpriseModal = () => {
+    if (enterpriseModal) enterpriseModal.classList.remove('active');
+  };
+
+  const forSaleBtn = document.getElementById('forSaleContactBtn');
+  if (forSaleBtn) forSaleBtn.addEventListener('click', openEnterpriseModal);
+
+  const closeEnterpriseBtn = document.getElementById('closeEnterpriseModalBtn');
+  if (closeEnterpriseBtn) closeEnterpriseBtn.addEventListener('click', closeEnterpriseModal);
+
+  if (enterpriseModal) {
+    enterpriseModal.addEventListener('click', (e) => {
+      if (e.target === enterpriseModal) closeEnterpriseModal();
+    });
+  }
+
+  // Copy Email to Clipboard Handler
+  const copyEmailBtn = document.getElementById('copyEnterpriseEmailBtn');
+  if (copyEmailBtn) {
+    copyEmailBtn.addEventListener('click', async () => {
+      const email = 'victory.business1@gmail.com';
+      try {
+        await navigator.clipboard.writeText(email);
+        const label = document.getElementById('copyBtnLabel');
+        if (label) label.textContent = '✓ Copied!';
+        triggerToast('Email copied to clipboard: victory.business1@gmail.com');
+        setTimeout(() => {
+          if (label) label.textContent = 'Copy Email';
+        }, 2500);
+      } catch (err) {
+        const temp = document.createElement('textarea');
+        temp.value = email;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+        triggerToast('Email copied to clipboard: victory.business1@gmail.com');
+      }
+    });
+  }
+
+  // Close modals on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (enterpriseModal && enterpriseModal.classList.contains('active')) closeEnterpriseModal();
+      if (taxonomyModal && taxonomyModal.classList.contains('active')) closeTaxonomy();
+      if (testerModal && testerModal.classList.contains('active')) closeTester();
+    }
+  });
+
   // Subcategory Chips Click Filter
   document.querySelectorAll('.subcat-chip').forEach(chip => {
     chip.addEventListener('click', () => {

@@ -5528,3 +5528,474 @@ body:not(.light-theme) .region-map-col {
   opacity: 0.16 !important;
   filter: grayscale(0.9) !important;
 }
+
+/* ==========================================================================
+   USER PROFILE CARD & FOR SALE / CONTACT US BUTTON
+   ========================================================================== */
+.user-profile-card {
+  margin-top: 14px;
+  background: linear-gradient(145deg, rgba(22, 23, 30, 0.95), rgba(16, 17, 23, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.user-profile-card:hover {
+  border-color: rgba(224, 8, 0, 0.35);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+}
+
+.user-profile-header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(224, 8, 0, 0.12);
+  border: 1px solid rgba(224, 8, 0, 0.35);
+  color: #FF5A5A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.user-avatar-circle svg {
+  stroke: #FF5A5A;
+}
+
+.user-online-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 8.5px;
+  height: 8.5px;
+  border-radius: 50%;
+  background: #10B981;
+  border: 2px solid #16171E;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.8);
+}
+
+.user-details-wrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.user-card-name {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-card-role {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* For Sale & Enterprise Contact Button */
+.btn-for-sale-contact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  padding: 8px 10px;
+  background: linear-gradient(135deg, rgba(224, 8, 0, 0.16) 0%, rgba(224, 8, 0, 0.05) 100%);
+  border: 1px solid rgba(224, 8, 0, 0.45);
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-family: var(--font-heading);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(224, 8, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-for-sale-contact:hover {
+  background: linear-gradient(135deg, rgba(224, 8, 0, 0.32) 0%, rgba(224, 8, 0, 0.18) 100%);
+  border-color: #E00800;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(224, 8, 0, 0.35);
+  color: #FFFFFF;
+}
+
+.btn-for-sale-contact:active {
+  transform: translateY(0);
+}
+
+.for-sale-pulse-dot {
+  width: 6.5px;
+  height: 6.5px;
+  border-radius: 50%;
+  background: #FF4444;
+  box-shadow: 0 0 6px #FF4444;
+  animation: pulseSaleDot 1.6s infinite ease-in-out;
+}
+
+@keyframes pulseSaleDot {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.4); opacity: 1; box-shadow: 0 0 10px #FF4444; }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+.for-sale-icon {
+  stroke: #FF6B6B;
+  flex-shrink: 0;
+}
+
+.for-sale-label {
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   ENTERPRISE CUSTOM SOLUTIONS MODAL (PREMIUM LUXURY MODAL)
+   ========================================================================== */
+.modal-dialog.enterprise-solutions-dialog {
+  max-width: 820px;
+  width: 95%;
+  background: #111218;
+  border: 1px solid rgba(224, 8, 0, 0.35);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.85), 0 0 40px rgba(224, 8, 0, 0.15);
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.enterprise-header {
+  padding: 22px 28px 18px;
+  background: linear-gradient(180deg, rgba(224, 8, 0, 0.12) 0%, rgba(17, 18, 24, 0) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.enterprise-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(224, 8, 0, 0.18);
+  border: 1px solid rgba(224, 8, 0, 0.45);
+  border-radius: 9999px;
+  color: #FF7777;
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  margin-bottom: 8px;
+}
+
+.pulse-sparkle {
+  color: #FF4444;
+  font-size: 11px;
+}
+
+.enterprise-header-titles h3 {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.3px;
+  margin: 0 0 6px 0;
+  line-height: 1.25;
+}
+
+.enterprise-header-titles p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.enterprise-body {
+  padding: 24px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Value intro banner */
+.enterprise-intro-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-left: 3px solid #E00800;
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+.intro-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: rgba(224, 8, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.intro-text strong {
+  display: block;
+  font-size: 13.5px;
+  color: #FFFFFF;
+  margin-bottom: 2px;
+}
+
+.intro-text p {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Services 2x2 Grid */
+.enterprise-services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.service-spec-card {
+  background: #161720;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.service-spec-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.service-spec-card.highlight {
+  border-color: rgba(224, 8, 0, 0.4);
+  background: linear-gradient(160deg, rgba(224, 8, 0, 0.08) 0%, #161720 100%);
+}
+
+.service-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.service-icon-box {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.service-card-top h4 {
+  font-family: var(--font-heading);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.service-spec-card p {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.service-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.service-bullets li {
+  font-size: 11px;
+  color: var(--text-muted);
+  position: relative;
+  padding-left: 14px;
+  line-height: 1.35;
+}
+
+.service-bullets li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: #E00800;
+}
+
+/* Contact Box */
+.enterprise-contact-box {
+  background: linear-gradient(135deg, rgba(224, 8, 0, 0.14) 0%, rgba(20, 21, 28, 0.95) 100%);
+  border: 1px solid rgba(224, 8, 0, 0.35);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.contact-box-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.contact-tag {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #FF7777;
+}
+
+.contact-email-val {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: 0.2px;
+}
+
+.contact-note {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.contact-box-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.enterprise-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.enterprise-btn.mailto-btn {
+  background: #E00800;
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 2px 10px rgba(224, 8, 0, 0.4);
+}
+
+.enterprise-btn.mailto-btn:hover {
+  background: #FF1A0D;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(224, 8, 0, 0.55);
+}
+
+.enterprise-btn.copy-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.enterprise-btn.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Light Theme Adaptations */
+body.light-theme .user-profile-card {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.08);
+}
+body.light-theme .user-card-name {
+  color: #1A1C23;
+}
+body.light-theme .user-avatar-circle {
+  background: rgba(224, 8, 0, 0.08);
+}
+body.light-theme .user-online-dot {
+  border-color: #FFFFFF;
+}
+body.light-theme .btn-for-sale-contact {
+  color: #E00800;
+  background: rgba(224, 8, 0, 0.06);
+  border-color: rgba(224, 8, 0, 0.35);
+}
+body.light-theme .btn-for-sale-contact:hover {
+  background: rgba(224, 8, 0, 0.12);
+  color: #B80600;
+}
+body.light-theme .modal-dialog.enterprise-solutions-dialog {
+  background: #FFFFFF;
+  border-color: rgba(224, 8, 0, 0.25);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+body.light-theme .enterprise-header-titles h3,
+body.light-theme .service-card-top h4,
+body.light-theme .contact-email-val {
+  color: #1A1C23;
+}
+body.light-theme .service-spec-card {
+  background: #F8FAFC;
+  border-color: #E2E8F0;
+}
+body.light-theme .service-spec-card.highlight {
+  background: #FFF5F5;
+  border-color: rgba(224, 8, 0, 0.3);
+}
+body.light-theme .enterprise-intro-banner {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+}
+body.light-theme .intro-text strong {
+  color: #0F172A;
+}
+body.light-theme .enterprise-contact-box {
+  background: linear-gradient(135deg, rgba(224, 8, 0, 0.08) 0%, #F8FAFC 100%);
+  border-color: rgba(224, 8, 0, 0.2);
+}
+body.light-theme .enterprise-btn.copy-btn {
+  background: #E2E8F0;
+  color: #0F172A;
+  border-color: #CBD5E1;
+}
+
